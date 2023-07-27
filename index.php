@@ -1,4 +1,11 @@
 <?php
+session_start();
+?>
+<?php
+
+
+$configErrors = require 'config/config_errors.php';
+$config = require 'config/config.php';
 
 // Séparer l'URL en plusieurs parties
 $request = $_SERVER['REQUEST_URI'];
@@ -36,10 +43,12 @@ if (file_exists($controller_path)) {
     if (method_exists($controller_obj, $methode)) {
         $controller_obj->$methode();
     } else {
-        echo "Erreur 404"; // On appelle une page d'erreur
+        $_SESSION['errorPage'] = $configErrors['404']; 
+        header('Location: '.$config["base_url"].'index.php/error');  
     }
 } else {
-    echo "Erreur 404"; // On appelle une page d'erreur
+    $_SESSION['errorPage'] = $configErrors['404']; 
+    header('Location: '.$config["base_url"].'index.php/error');  
 }
 
     

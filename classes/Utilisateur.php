@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Utilisateur : Classe représentant un utilisateur dans la base de données
+ * Exemple de valeur : (3, "Admin", "Jean", "jean@gmail.com", "mdp crypté", 1, "ADMIN")
+ */
 class Utilisateur
 {
     private $id;
@@ -9,7 +13,19 @@ class Utilisateur
     private $mdp;
     private $aAcces;
     private $codeRole;
-
+    
+    /**
+     * __construct : Constructeur de la classe Utilisateur
+     *
+     * @param  mixed $id
+     * @param  string $nom
+     * @param  string $prenom
+     * @param  string $adresseMail
+     * @param  string $mdp
+     * @param  bool|int $aAcces
+     * @param  string $codeRole
+     * @return void
+     */
     public function __construct($id, $nom, $prenom, $adresseMail, $mdp, $aAcces, $codeRole)
     {
         $this->id = $id;
@@ -22,8 +38,8 @@ class Utilisateur
     }
     
     /**
-     * Retourne l'id de l'utilisateur
-     * @return int
+     * getId : Retourne l'id de l'utilisateur
+     * @return mixed
      */
     public function getId()
     {
@@ -31,7 +47,7 @@ class Utilisateur
     }
     
     /**
-     * Retourne le nom de l'utilisateur
+     * getNom : Retourne le nom de l'utilisateur
      * @return string
      */
     public function getNom()
@@ -40,7 +56,7 @@ class Utilisateur
     }
     
     /**
-     * Retourne le prénom de l'utilisateur
+     * getPrenom : Retourne le prénom de l'utilisateur
      * @return string
      */
     public function getPrenom()
@@ -49,7 +65,7 @@ class Utilisateur
     }
     
     /**
-     * Retourne l'adresse mail de l'utilisateur
+     * getAdresseMail : Retourne l'adresse mail de l'utilisateur
      * @return string
      */
     public function getAdresseMail()
@@ -58,7 +74,7 @@ class Utilisateur
     }
     
     /**
-     * Retourne le mot de passe de l'utilisateur encrypté
+     * getMdp : Retourne le mot de passe de l'utilisateur encrypté
      * @return string
      */
     public function getMdp()
@@ -67,7 +83,7 @@ class Utilisateur
     }
     
     /**
-     * Retourne si l'utilisateur a accès ou non
+     * getAAcces : Retourne si l'utilisateur a accès ou non
      * @return int
      */
     public function getAAcces()
@@ -76,7 +92,7 @@ class Utilisateur
     }
     
     /**
-     * Retourne le code du rôle de l'utilisateur
+     * getCodeRole : Retourne le code du rôle de l'utilisateur
      * @return string
      */
     public function getCodeRole()

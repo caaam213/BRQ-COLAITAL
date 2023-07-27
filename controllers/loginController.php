@@ -1,22 +1,31 @@
 <?php
-    session_start();
-?>
-<?php
 
 require_once 'models/UtilisateurModel.php';
 require_once 'config/config_errors.php';
+require_once 'utilsController.php';
+
 
 
 class LoginController
 {  
     private static $config;
-    private static $configErrors;
+    private static $configErrors;    
+    /**
+     * __construct : Constructeur de la classe LoginController
+     *
+     * @return void
+     */
     public function __construct()
     {
         self::$config = require 'config/config.php';
         self::$configErrors = require 'config/config_errors.php';
     }  
-
+    
+    /**
+     * default : Fonction par défaut qui va appeler la fonction displayLoginForm
+     *
+     * @return void
+     */
     public function default()
     {
         $this->displayLoginForm();
@@ -28,7 +37,8 @@ class LoginController
      */
     public function displayLoginForm()
     {
-        require_once 'views/UtilisateurConnexion.php';
+        require_once 'views/utilisateurConnexion.php';
+        unsetSessionVariables();
     }
     
     /**
@@ -37,21 +47,22 @@ class LoginController
      */
     public static function verify()
     {
-        if (empty($_POST['nom_util']) || empty($_POST['mdp'])) {
+        if (empty($_POST['email']) || empty($_POST['mdp'])) {
             header('Location: '.self::$config["base_url"]);
         }
 
-        $nom_util = htmlspecialchars($_POST['nom_util']);
+        $email = htmlspecialchars($_POST['email']);
         $mdp = htmlspecialchars($_POST['mdp']);
         
-        $utilisateur = UtilisateurModel::verifyIfUserExists($nom_util);
-        session_unset();
+        $utilisateur = UtilisateurModel::verifyIfUserExists($email);
+        session_unset(); // On supprime les variables de session erreur et success
 
         // Si le mdp est correct, on crée les variables de session
         if ($utilisateur) {
             if (password_verify($mdp, $utilisateur->getMdp())) {
                 if ($utilisateur->getAAcces() == 1) {
                     
+                    $_SESSION['email'] = $utilisateur->getAdresseMail();
                     $_SESSION['id_util'] = $utilisateur->getId();
                     $_SESSION['nom_util'] = $utilisateur->getNom();
                     $_SESSION['prenom_util'] = $utilisateur->getPrenom();
@@ -60,19 +71,19 @@ class LoginController
 
                 } else {
                     // Si l'utilisateur n'a pas accès à l'application
-                    $_SESSION['error'] = self::$configErrors[1002];
+                    $_SESSION['error'] = self::$configErrors[1002]; // Erreur : Vous n'avez pas accès à l'application
 
                 }
                 
 
             } else {
                 // Si le mdp est incorrect
-                $_SESSION['error'] = self::$configErrors[1001];
+                $_SESSION['error'] = self::$configErrors[1001]; // Erreur : Le mot de passe est incorrect
                 header('Location: '.self::$config["base_url"]); 
             }
         } else {
             // Si l'utilisateur n'existe pas
-            $_SESSION['error'] = self::$configErrors[1000];
+            $_SESSION['error'] = self::$configErrors[1000]; // Erreur : L'adresse e-mail n'existe pas
             header('Location: '.self::$config["base_url"]); 
         }
     }
@@ -83,8 +94,8 @@ class LoginController
      */
     public function deconnexion()
     {
-        session_unset();
-        session_destroy();
+        session_unset(); // On supprime les variables de session
+        session_destroy(); // On détruit la session
         header('Location: '.self::$config["base_url"]); 
     }
 }

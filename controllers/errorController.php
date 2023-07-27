@@ -1,14 +1,14 @@
 <?php
-require_once 'models/UtilisateurModel.php';
 require_once 'config/config_errors.php';
 require_once 'utilsController.php';
 
-class HomeController
+
+class ErrorController
 {
     private static $config;
     private static $configErrors;    
     /**
-     * __construct : Constructeur de la classe HomeController
+     * __construct : Constructeur de la classe ErrorController
      *
      * @return void
      */
@@ -16,36 +16,36 @@ class HomeController
     {
         self::$config = require 'config/config.php';
         self::$configErrors = require 'config/config_errors.php';
-    }     
+    } 
+    
     /**
-     * default : Fonction par défaut qui va appeler la fonction displayHome
+     * default : Fonction par défaut qui va appeler la fonction displayError
      *
      * @return void
      */
     public function default()
     {
-        $this->displayHome();
+        $this->displayError();
     }
     
     
     /**
-     * displayHome : Afficher la page d'accueil une fois l'utilisateur connecté
+     * displayError : Afficher la page d'erreur
      *
      * @return void
      */
-    public function displayHome()
+    public function displayError()
     {
-        unsetSessionVariables();
-        if (isset($_SESSION['code_role']))
+        if (isset($_SESSION['errorPage']))
         {
-            require_once 'views/home.php';
+            require_once 'views/error.php'; // Redirection vers la page d'erreur avec le message d'erreur
         }
         else
         {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
+            $_SESSION['error'] = self::$configErrors['1006']; // Erreur : Vous avez été déconnecté de l'application
             header('Location: '.self::$config["base_url"]); 
         }
         
-           
+        
     }
 }

@@ -1,6 +1,8 @@
 <?php
 require_once 'header.php';
 ?>
+<title>Connexion</title>
+</head>
 
 <body class="bg-light">
 
@@ -17,8 +19,8 @@ require_once 'header.php';
     ?>
 
     <div class="form-group row w-75 mx-auto">
-      <label for="nom_util" class="text-center">Nom utilisateur</label>
-      <input type="text" class="form-control" name="nom_util" id="nom_util" required>
+      <label for="email" class="text-center">Adresse email</label>
+      <input type="email" class="form-control" name="email" id="email" required>
     </div>
 
     <div class="form-group row mt-2 w-75 mx-auto">
