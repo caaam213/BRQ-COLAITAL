@@ -22,7 +22,7 @@ class LoginController
     }  
     
     /**
-     * default : Fonction par défaut qui va appeler la fonction displayLoginForm
+     * default : Fonction appelée par défaut par le routeur
      *
      * @return void
      */
@@ -37,6 +37,15 @@ class LoginController
      */
     public function displayLoginForm()
     {
+        if (isset($_SESSION['email']))
+        {
+            session_unset($_SESSION['email']);
+            session_unset($_SESSION['id_util']);
+            session_unset($_SESSION['nom_util']);
+            session_unset($_SESSION['prenom_util']);
+            session_unset($_SESSION['code_role']);
+        }
+        
         require_once 'views/utilisateurConnexion.php';
         unsetSessionVariables();
     }
@@ -72,7 +81,8 @@ class LoginController
                 } else {
                     // Si l'utilisateur n'a pas accès à l'application
                     $_SESSION['error'] = self::$configErrors[1002]; // Erreur : Vous n'avez pas accès à l'application
-
+                    header('Location: '.self::$config["base_url"]);
+                    return;
                 }
                 
 

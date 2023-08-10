@@ -17,7 +17,7 @@ class Utilisateur
     /**
      * __construct : Constructeur de la classe Utilisateur
      *
-     * @param  mixed $id
+     * @param  int $id
      * @param  string $nom
      * @param  string $prenom
      * @param  string $adresseMail
@@ -39,7 +39,7 @@ class Utilisateur
     
     /**
      * getId : Retourne l'id de l'utilisateur
-     * @return mixed
+     * @return int
      */
     public function getId()
     {

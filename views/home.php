@@ -1,7 +1,7 @@
 <?php 
     require_once 'header.php';
 ?>
-  <title>Interface BRQ</title>
+  <title>Accueil</title>
   <style>
 
     .btn-icon i {

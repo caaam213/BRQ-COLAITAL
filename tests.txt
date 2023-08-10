@@ -1,0 +1,12 @@
+Pour les utilisateurs : 
+	1- Tests : Connexion en tant qu'administrateur 
+	2- Ajouter un utilisateur à la base de données : ADMIN, PROD et VENTE
+	3- Se déconnecter puis faire un retour en arrière pour voir si on est encore connecté
+	4- Se connecter avec le nouvel utilisateur afin de vérifier que le mdp est bon
+	5- Changer le mdp avec cet utilisateur et réessayer de se connecter avec ce nouveau mdp
+	6- Revenir en admin : Réinitialiser le mot de passe de cet utilisateur et lui enlever les droits d'accès à l'application
+	7- Nouvel utilisateur : Se connecter avec un mdp incorrect puis avec le bon mot de passe. Vérifier s'il peut accéder à l'application 	ou non.
+
+Pour les unités de mesures : 
+	
+	

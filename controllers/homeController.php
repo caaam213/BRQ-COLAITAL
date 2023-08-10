@@ -18,7 +18,7 @@ class HomeController
         self::$configErrors = require 'config/config_errors.php';
     }     
     /**
-     * default : Fonction par défaut qui va appeler la fonction displayHome
+     * default : Fonction appelée par défaut par le routeur
      *
      * @return void
      */

@@ -7,11 +7,16 @@
             "restrict_access" => false
         ], 
         [
+            "name" => "Interface Produits",
+            "url" => self::$config["base_url"]."index.php/produitsAssocies",
+            "icon" => "fa-solid fa-cart-plus",
+            "restrict_access" => false,
+        ],
+        [
             "name" => "Interface Utilisateurs",
             "url" => self::$config["base_url"]."index.php/utilisateurs",
             "icon" => "fa-solid fa-user",
-            "restrict_access" => true, 
-            "roleToAccess" => "ADMIN"
+            "restrict_access" => false, 
         ], 
         [
             "name" => "Déconnexion",
@@ -19,4 +24,5 @@
             "icon" => "fa-solid fa-right-from-bracket",
             "restrict_access" => false
         ],
+
     );

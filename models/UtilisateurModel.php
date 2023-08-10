@@ -1,18 +1,24 @@
 <?php
 require_once 'models/connexionDB.php';
 require_once 'classes/Utilisateur.php';
+require_once 'models/HistoriqueModel.php';
 class UtilisateurModel 
 {    
     /**
      * getAllUtilisateurs : Retourne tous les utilisateurs
+     * @param bool $orderByName : Si true, les utilisateurs seront triés par ordre alphabétique
      * @return array
      */
-    public static function getAllUtilisateurs()
+    public static function getAllUtilisateurs($orderByName = false)
     {
         
         try {
             $dbConnection = ConnexionDB::getInstance()->getConnection();
-            $stmt = $dbConnection->query("SELECT * FROM Utilisateur");
+            $query = "SELECT * FROM Utilisateur";
+            if ($orderByName) {
+                $query .= " ORDER BY nom_util";
+            }
+            $stmt = $dbConnection->query($query);
             $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             
@@ -38,6 +44,8 @@ class UtilisateurModel
             return array();
         }
     }
+
+    
     
     /**
      * Retourne un utilisateur en fonction de son id s'il existe dans la base de données
@@ -130,10 +138,8 @@ class UtilisateurModel
 
             // Ajout dans la table Historique
             $textForHistoric = "L'utilisateur " . $utilisateur->getNom() . " " . $utilisateur->getPrenom() . " avec l'id ".$lastIdInserted." a été ajouté à la date du " . date("d/m/Y") . " à " . date("H:i:s") . ".\n";
-            $stmt = $dbConnection->prepare("INSERT INTO Historique (texte_historique) VALUES (:texte_historique)");
-            $stmt->bindParam(':texte_historique', $textForHistoric);
-            $stmt->execute();
-            
+            HistoriqueModel::addToHistorique($textForHistoric);
+
             return true;
         } catch (PDOException $e) {
             echo "Erreur lors de l'ajout de l'utilisateur : " . $e->getMessage();
@@ -200,9 +206,7 @@ class UtilisateurModel
             // Ajout dans la table Historique
             $accesText = ($acces == 0) ? "désactivé" : "activé";
             $textForHistoric = "L'accès de l'utilisateur avec l'id ".$idUtilisateur." identifié comme ".$utilisateur->getNom()." ".$utilisateur->getPrenom()." a été ".$accesText." à la date du " . date("d/m/Y") . " à " . date("H:i:s") . ".\n";
-            $stmt = $dbConnection->prepare("INSERT INTO Historique (texte_historique) VALUES (:texte_historique)");
-            $stmt->bindParam(':texte_historique', $textForHistoric);
-            $stmt->execute();
+            HistoriqueModel::addToHistorique($textForHistoric);
             
             return true;
         } catch (PDOException $e) {
@@ -230,9 +234,7 @@ class UtilisateurModel
 
             $utilisateur = UtilisateurModel::getUtilisateurById($idUtilisateur);
             $textForHistoric = "Le mot de passe de l'utilisateur avec l'id ".$idUtilisateur." identifié comme ".$utilisateur->getNom()." ".$utilisateur->getPrenom()." a été modifié/réinitialisé à la date du " . date("d/m/Y") . " à " . date("H:i:s") . ".\n";
-            $stmt = $dbConnection->prepare("INSERT INTO Historique (texte_historique) VALUES (:texte_historique)");
-            $stmt->bindParam(':texte_historique', $textForHistoric);
-            $stmt->execute();
+            HistoriqueModel::addToHistorique($textForHistoric);
             
             return true;
         } catch (PDOException $e) {
@@ -260,9 +262,7 @@ class UtilisateurModel
 
             // Ajout dans la table Historique
             $textForHistoric = "L'utilisateur avec l'id ".$idUtilisateur." identifié comme ".$utilisateur->getNom()." ".$utilisateur->getPrenom()." a été supprimé à la date du " . date("d/m/Y") . " à " . date("H:i:s") . ".\n";
-            $stmt = $dbConnection->prepare("INSERT INTO Historique (texte_historique) VALUES (:texte_historique)");
-            $stmt->bindParam(':texte_historique', $textForHistoric);
-            $stmt->execute();
+            HistoriqueModel::addToHistorique($textForHistoric);
             
             return true;
         } catch (PDOException $e) {
@@ -270,6 +270,8 @@ class UtilisateurModel
             return false;
         }
     }
+
+    
 
     
 

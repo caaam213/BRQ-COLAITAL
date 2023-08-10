@@ -18,11 +18,13 @@ require_once 'header.php';
     }
     ?>
 
+    <!--Adresse mail -->
     <div class="form-group row w-75 mx-auto">
       <label for="email" class="text-center">Adresse email</label>
       <input type="email" class="form-control" name="email" id="email" required>
     </div>
 
+    <!--Mot de passe -->
     <div class="form-group row mt-2 w-75 mx-auto">
       <label for="mdp" class="text-center">Mot de passe</label>
       <input type="password" class="form-control" name="mdp" id="mdp" required>

@@ -23,7 +23,7 @@ class UtilisateursController
     }   
 
     /**
-     * default : Fonction par défaut qui va appeler la fonction displayUtilisateursInterface
+     * default : Fonction appelée par défaut par le routeur
      *
      * @return void
      */
@@ -132,7 +132,7 @@ class UtilisateursController
                 }
                 else
                 {
-                    $_SESSION['error'] = self::$configErrors['1111']; // Erreur : Erreur inconnue
+                    $_SESSION['error'] = "Erreur lors de l'ajout d'un utilisateur"; // Erreur : Erreur lors de l'ajout à la BD
                     header('Location: '.self::$config["base_url"].'index.php/utilisateurs/addUser');
                 }
             }
@@ -195,14 +195,22 @@ class UtilisateursController
         {
             if ($_SESSION['code_role'] == 'ADMIN')
             {
-                $utilisateursList = UtilisateurModel::getAllUtilisateurs();
+                $utilisateursList = UtilisateurModel::getAllUtilisateurs(true);
+                // On supprime les utilisateurs qui sont des administrateurs lors de l'affichage
+                foreach ($utilisateursList as $key => $utilisateur)
+                {
+                    if ($utilisateur->getCodeRole() == 'ADMIN')
+                    {
+                        unset($utilisateursList[$key]);
+                    }
+                }
                 $roleUtilisateurs = RoleUtilisateurModel::getAllRoleUtilisateurs();
                 require_once 'views/utilisateursListManage.php';
                 unsetSessionVariables();
             }
             else
             {
-                $_SESSION['errorPage'] = self::$config['1003']; // Erreur : Vous n'avez pas les droits d'accès à cette page
+                $_SESSION['errorPage'] = self::$config['1002']; // Erreur : Vous n'avez pas les droits d'accès à cette page
                 header('Location: '.self::$config["base_url"].'index.php/error');  
             }
             
@@ -234,7 +242,7 @@ class UtilisateursController
             }
             else
             {
-                $_SESSION['error'] = self::$configErrors['1111']; // Erreur : Erreur inconnue
+                $_SESSION['error'] = "Erreur lors de la modification du mot de passe"; // Erreur : Erreur lors de la modification du mot de passe
                 header('Location: '.self::$config["base_url"].'index.php/utilisateurs');
             }
         }
@@ -279,7 +287,7 @@ class UtilisateursController
                 }
                 else
                 {
-                    $_SESSION['error'] = self::$configErrors['1111']; // Erreur : Erreur inconnue
+                    $_SESSION['error'] = "Erreur lors de la réinitialisation du mot de passe"; // Erreur : Erreur lors de la réinitialisation du mot de passe
                     header('Location: '.self::$config["base_url"].'index.php/utilisateurs/allUsers');
                 }
             }
@@ -292,46 +300,6 @@ class UtilisateursController
         
         
     }
-    
-    /**
-     * removeUtilisateur : Supprimer un utilisateur
-     *
-     * @return void
-     */
-    public function removeUtilisateur()
-    {
-        if (isset($_SESSION['code_role']))
-        {
-            if ($_SESSION['code_role'] != 'ADMIN')
-            {
-                $_SESSION['error'] = self::$configErrors['1004']; // Erreur : Vous n'avez pas les droits pour accéder à cette page
-                header('Location: '.self::$config["base_url"].'index.php/error');  
-            }
-            else
-            {
-                $idUtilisateur = htmlspecialchars($_GET['idUtilisateur']);
-                $utilisateur = UtilisateurModel::getUtilisateurById($idUtilisateur);
-                $response = UtilisateurModel::deleteUser($idUtilisateur);
-                
-                if ($response)
-                {
-                    $_SESSION['success'] = "L'utilisateur ".$utilisateur->getNom()." ".$utilisateur->getPrenom()." a bien été supprimé";
-                    header('Location: '.self::$config["base_url"].'index.php/utilisateurs/allUsers');
-                }
-                else
-                {
-                    $_SESSION['error'] = self::$configErrors['1111']; // Erreur : Erreur inconnue
-                    header('Location: '.self::$config["base_url"].'index.php/utilisateurs/allUsers');
-                }
-            }
-        }
-        else
-        {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config["base_url"]);
-        }
-        
-        
-    }
+
 }
 

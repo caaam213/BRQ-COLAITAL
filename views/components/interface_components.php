@@ -1,7 +1,7 @@
 <?php 
 
-    if (sizeof($interfaceArray)%4 == 0) {
-        $nbRow = 4;
+    if (sizeof($interfaceArray)%2 == 0) {
+        $nbRow = 2;
     } else {
         $nbRow = 3;
     }

@@ -19,7 +19,7 @@ class ErrorController
     } 
     
     /**
-     * default : Fonction par défaut qui va appeler la fonction displayError
+     * default : Fonction appelée par défaut par le routeur
      *
      * @return void
      */

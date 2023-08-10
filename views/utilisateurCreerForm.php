@@ -10,7 +10,7 @@
     
     <form action=<?= self::$config["base_url"]."index.php/utilisateurs/add"?> method="post">
         <div class="row">
-            <a href="<?= self::$config['base_url'] ?>index.php/home" class="btn btn-outline-secondary btn-icon btn-rounded-circle mx-auto w-25">
+            <a href="<?= self::$config['base_url'] ?>index.php/utilisateurs" class="btn btn-outline-secondary btn-icon btn-rounded-circle mx-auto w-25">
               <i class="fas fa-arrow-left"></i>
             </a>
         </div>
