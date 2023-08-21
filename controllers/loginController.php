@@ -77,12 +77,13 @@ class LoginController
                     $_SESSION['prenom_util'] = $utilisateur->getPrenom();
                     $_SESSION['code_role'] = $utilisateur->getCodeRole();
                     header('Location: '.self::$config["base_url"].'index.php/home');
+                    exit();
 
                 } else {
                     // Si l'utilisateur n'a pas accès à l'application
                     $_SESSION['error'] = self::$configErrors[1002]; // Erreur : Vous n'avez pas accès à l'application
                     header('Location: '.self::$config["base_url"]);
-                    return;
+                    exit();
                 }
                 
 
@@ -90,11 +91,13 @@ class LoginController
                 // Si le mdp est incorrect
                 $_SESSION['error'] = self::$configErrors[1001]; // Erreur : Le mot de passe est incorrect
                 header('Location: '.self::$config["base_url"]); 
+                exit();
             }
         } else {
             // Si l'utilisateur n'existe pas
             $_SESSION['error'] = self::$configErrors[1000]; // Erreur : L'adresse e-mail n'existe pas
             header('Location: '.self::$config["base_url"]); 
+            exit();
         }
     }
     
@@ -107,5 +110,6 @@ class LoginController
         session_unset(); // On supprime les variables de session
         session_destroy(); // On détruit la session
         header('Location: '.self::$config["base_url"]); 
+        exit();
     }
 }

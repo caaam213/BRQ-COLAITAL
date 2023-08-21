@@ -13,6 +13,8 @@ class BRQ {
     private $Id_Utilisateur_cree;
     private $Id_dernier_util_modif;
 
+    private $etat_brq;
+
        
     /**
      * __construct : Constructeur de la classe BRQ
@@ -22,10 +24,13 @@ class BRQ {
      * @param  int $num_brq
      * @param  datetime $date_derniere_modif
      * @param  string $faits_saillants
+     * @param  int $Id_Utilisateur_cree
+     * @param  int $Id_dernier_util_modif
+     * @param  string $etat_brq
      * @return void
      */
     public function __construct($date_brq, $date_creation, $num_brq, $date_derniere_modif, $faits_saillants, 
-    $Id_Utilisateur_cree, $Id_dernier_util_modif) {
+    $Id_Utilisateur_cree, $Id_dernier_util_modif, $etat_brq) {
         $this->date_brq = $date_brq;
         $this->date_creation = $date_creation;
         $this->num_brq = $num_brq;
@@ -33,6 +38,7 @@ class BRQ {
         $this->faits_saillants = $faits_saillants;
         $this->Id_Utilisateur_cree = $Id_Utilisateur_cree;
         $this->Id_dernier_util_modif = $Id_dernier_util_modif;
+        $this->etat_brq = $etat_brq;
     }
     
         
@@ -173,6 +179,25 @@ class BRQ {
      */
     public function setIdDernierUtilModif($Id_dernier_util_modif) {
         $this->Id_dernier_util_modif = $Id_dernier_util_modif;
+    }
+    
+    /**
+     * getEtatBrq : Retourne l'état du BRQ
+     *
+     * @return string
+     */
+    public function getEtatBrq() {
+        return $this->etat_brq;
+    }
+    
+    /**
+     * setEtatBrq : Définit l'état du BRQ
+     *
+     * @param  string $etat_brq
+     * @return void
+     */
+    public function setEtatBrq($etat_brq) {
+        $this->etat_brq = $etat_brq;
     }
 }
 

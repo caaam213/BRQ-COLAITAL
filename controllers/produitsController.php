@@ -92,6 +92,7 @@ class ProduitsController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -113,6 +114,7 @@ class ProduitsController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -155,6 +157,7 @@ class ProduitsController
                 if (in_array($codeProduit, $produitsCode)) {
                     $_SESSION['error'] = "Le produit existe déjà"; // Erreur : Le code produit existe déjà
                     header('Location: '.self::$config['base_url'].'index.php/produits/addProduit');
+                    exit();
                 } else {
                     $dateCreation = date('d/m/Y');
                     $idUtilisateur = $_SESSION['id_util'];
@@ -184,18 +187,21 @@ class ProduitsController
                         
                     }
                     header('Location: '.self::$config['base_url'].'index.php/produits/addProduit');
+                    exit();
                 }
             }
             else
             {
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
                 header('Location: '.self::$config['base_url'].'index.php/produits/addProduit');
+                exit();
             }
         }
         else
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -226,10 +232,12 @@ class ProduitsController
             } else {
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
                 header('Location: '.self::$config['base_url'].'index.php/produits');
+                exit();
             }
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -244,6 +252,7 @@ class ProduitsController
     {
         $_SESSION['error'] = self::$configErrors['1111']. " ".$msg; 
         header('Location: '.self::$config['base_url'].'index.php/produits/modifyProduit?idProduit='.$idProduit);
+        exit();
         
     }
     
@@ -283,7 +292,7 @@ class ProduitsController
                     {
                         $_SESSION['error'] = "Le produit existe déjà"; // Erreur : Le code produit existe déjà
                         header('Location: '.self::$config['base_url'].'index.php/produits/modifyProduit?idProduit='.$idProduit);
-                        return;
+                        exit();
                     }
                 }
 
@@ -342,7 +351,7 @@ class ProduitsController
 
                     $_SESSION['success'] = "Le produit ". $produit->getCodeProduit() ."a bien été modifié"; // Succès : Le produit a bien été modifié
                     header('Location: '.self::$config['base_url'].'index.php/produits');
-                    
+                    exit();
 
                     
                 }
@@ -352,6 +361,7 @@ class ProduitsController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 

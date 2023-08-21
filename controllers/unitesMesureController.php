@@ -42,6 +42,7 @@ class UnitesMesureController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -58,6 +59,7 @@ class UnitesMesureController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -105,9 +107,11 @@ class UnitesMesureController
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
             }
             header('Location: '.self::$config['base_url'].'index.php/unitesMesure/addUniteMesure');
+            exit();
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -126,7 +130,7 @@ class UnitesMesureController
                 if ($idUnite == null || $idUnite == "") {
                     $_SESSION['error'] = "L'unité de mesure n'existe pas"; // L'unité de mesure n'existe pas
                     header('Location: '.self::$config['base_url'].'index.php/error');
-                    return;
+                    exit();
                 }
 
                 // On vérifie que l'unité de mesure existe dans la base de données
@@ -139,17 +143,20 @@ class UnitesMesureController
                 {
                     $_SESSION['errorPage'] = "L'unité de mesure n'existe pas"; // Erreur : L'unité de mesure n'existe pas
                     header('Location: '.self::$config['base_url'].'index.php/error');
+                    exit();
                 }
             }
             else
             {
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
                 header('Location: '.self::$config['base_url'].'index.php/unitesMesure');
+                exit();
             }
             unsetSessionVariables();
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
     
@@ -179,9 +186,11 @@ class UnitesMesureController
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
             }
             header('Location: '.self::$config['base_url'].'index.php/unitesMesure');
+            exit();
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 }

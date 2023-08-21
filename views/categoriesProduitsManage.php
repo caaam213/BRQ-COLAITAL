@@ -10,6 +10,10 @@
     width:100%;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 </style>
 <body>
 

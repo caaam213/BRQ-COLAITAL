@@ -44,6 +44,7 @@ class ErrorController
         {
             $_SESSION['error'] = self::$configErrors['1006']; // Erreur : Vous avez été déconnecté de l'application
             header('Location: '.self::$config["base_url"]); 
+            exit();
         }
         
         

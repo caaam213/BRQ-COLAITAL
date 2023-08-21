@@ -43,6 +43,7 @@ class produitsAssociesController
         } else {
             $_SESSION['error'] = self::$configErrors['1003'];
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 

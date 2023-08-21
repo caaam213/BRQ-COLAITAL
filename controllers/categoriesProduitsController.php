@@ -47,6 +47,7 @@ class CategoriesProduitsController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 
@@ -59,6 +60,7 @@ class CategoriesProduitsController
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 
@@ -73,6 +75,7 @@ class CategoriesProduitsController
                     if ($categorieProduit->getCodeCategorie() == $_POST['codeCategorie']) {
                         $_SESSION['error'] = self::$configErrors['1008']; // Erreur : La catégorie existe déjà
                         header('Location: '.self::$config['base_url'].'index.php/categoriesProduits/addCategorie');
+                        exit();
                     }
                 }
 
@@ -90,13 +93,16 @@ class CategoriesProduitsController
                     $_SESSION['success'] = "La catégorie a bien été ajoutée"; // Succès : La catégorie a bien été ajoutée
                 }
                 header('Location: '.self::$config['base_url'].'index.php/categoriesProduits/addCategorie');
+                exit();
             } else {
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
                 header('Location: '.self::$config['base_url'].'index.php/categoriesProduits/addCategorie');
+                exit();
             }
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 
@@ -116,17 +122,20 @@ class CategoriesProduitsController
                 {
                     $_SESSION['errorPage'] = "La catégorie n'existe pas"; // Erreur : La catégorie n'existe pas
                     header('Location: '.self::$config['base_url'].'index.php/error');
+                    exit();
                 }
             }
             else
             {
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
                 header('Location: '.self::$config['base_url'].'index.php/categoriesProduits');
+                exit();
             }
             unsetSessionVariables();
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 
@@ -154,14 +163,17 @@ class CategoriesProduitsController
 
                 }   
                 header('Location: '.self::$config['base_url'].'index.php/categoriesProduits');
+                exit();
             } 
             else {
                 $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
                 header('Location: '.self::$config['base_url'].'index.php/categoriesProduits/modifyCategorieProduct?idCategorie='.$idCategorie);
+                exit();
             }
         } else {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url']);
+            exit();
         }
     }
 

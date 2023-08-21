@@ -49,6 +49,7 @@ class UtilisateursController
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page   
             header('Location: '.self::$config["base_url"]); 
+            exit();
         }
     }
     
@@ -72,6 +73,7 @@ class UtilisateursController
             {
                 $_SESSION['errorPage'] = self::$config['1002']; // Erreur : Vous n'avez pas les droits d'accès à cette page
                 header('Location: '.self::$config["base_url"].'index.php/error');  
+                exit();
             }
             
         }
@@ -79,6 +81,7 @@ class UtilisateursController
         {
             $_SESSION['errorPage'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"].'index.php/error');  
+            exit();
         }
     }
     
@@ -120,6 +123,7 @@ class UtilisateursController
                     {
                         $_SESSION['error'] = self::$configErrors['1005']; // Erreur : L'adresse e-mail existe déjà      
                         header('Location: '.self::$config["base_url"].'index.php/utilisateurs/addUser');
+                        exit();
                     }
                     else
                     {
@@ -128,18 +132,21 @@ class UtilisateursController
                         $utilisateurModel->addUtilisateur($utilisateur);
                         $_SESSION['success'] = "L'utilisateur a bien été ajouté";
                         header('Location: '.self::$config["base_url"].'index.php/utilisateurs');
+                        exit();
                     }
                 }
                 else
                 {
                     $_SESSION['error'] = "Erreur lors de l'ajout d'un utilisateur"; // Erreur : Erreur lors de l'ajout à la BD
                     header('Location: '.self::$config["base_url"].'index.php/utilisateurs/addUser');
+                    exit();
                 }
             }
             else
             {
                 $_SESSION['error'] = self::$configErrors['1004']; // Erreur : Vous n'avez pas les droits pour accéder à cette page
                 header('Location: '.self::$config["base_url"]);
+                exit();
             }
             
         }
@@ -147,6 +154,7 @@ class UtilisateursController
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"]); 
+            exit();
         }
     }
     
@@ -168,11 +176,13 @@ class UtilisateursController
                 $utilisateurModel->updateAcces($acces, $idUtilisateur);
                 $_SESSION['success'] = "L'accès a bien été modifié";
                 header('Location: '.self::$config["base_url"].'index.php/utilisateurs/allUsers');
+                exit();
             }
             else
             {
                 $_SESSION['error'] = self::$configErrors['1004']; // Erreur : Vous n'avez pas les droits pour accéder à cette page
                 header('Location: '.self::$config["base_url"]);
+                exit();
             }
             
         }
@@ -180,6 +190,7 @@ class UtilisateursController
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"]); 
+            exit();
         }
     }
 
@@ -211,7 +222,8 @@ class UtilisateursController
             else
             {
                 $_SESSION['errorPage'] = self::$config['1002']; // Erreur : Vous n'avez pas les droits d'accès à cette page
-                header('Location: '.self::$config["base_url"].'index.php/error');  
+                header('Location: '.self::$config["base_url"].'index.php/error'); 
+                exit(); 
             }
             
         }
@@ -219,6 +231,7 @@ class UtilisateursController
         {
             $_SESSION['errorPage'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"].'index.php/error');  
+            exit();
         }
     }
     
@@ -239,17 +252,20 @@ class UtilisateursController
             {
                 $_SESSION['success'] = "Votre mot de passe a bien été modifié";
                 header('Location: '.self::$config["base_url"].'index.php/utilisateurs');
+                exit();
             }
             else
             {
                 $_SESSION['error'] = "Erreur lors de la modification du mot de passe"; // Erreur : Erreur lors de la modification du mot de passe
                 header('Location: '.self::$config["base_url"].'index.php/utilisateurs');
+                exit();
             }
         }
         else
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"]);
+            exit();
         }
         
 
@@ -268,6 +284,7 @@ class UtilisateursController
             {
                 $_SESSION['error'] = self::$configErrors['1004']; // Erreur : Vous n'avez pas les droits pour accéder à cette page
                 header('Location: '.self::$config["base_url"].'index.php/error');  
+                exit();
             }
             else
             {
@@ -284,11 +301,13 @@ class UtilisateursController
                     $_SESSION['success'] = "Le mot de passe a bien été réinitialisé. Le nouveau mot de passe de l'utilisateur ".$utilisateur->getNom()." ".$utilisateur->getPrenom()." 
                     est : ".$password."";
                     header('Location: '.self::$config["base_url"].'index.php/utilisateurs/allUsers');
+                    exit();
                 }
                 else
                 {
                     $_SESSION['error'] = "Erreur lors de la réinitialisation du mot de passe"; // Erreur : Erreur lors de la réinitialisation du mot de passe
                     header('Location: '.self::$config["base_url"].'index.php/utilisateurs/allUsers');
+                    exit();
                 }
             }
         }
@@ -296,6 +315,7 @@ class UtilisateursController
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"]);
+            exit();
         }
         
         

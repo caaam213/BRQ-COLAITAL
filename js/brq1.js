@@ -1,212 +1,4 @@
-<?php 
-    require_once 'header.php';
-?>
-  <title>Production et vente</title>
-  
-</head>
-<body>
-
-<!-- Bouton de retour -->
-<div class="row mt-3">
-  <a href="<?= self::$config['base_url'] ?>index.php/brq" class="btn btn-outline-success btn-icon btn-rounded-circle mx-auto w-25">
-    <i class="fas fa-arrow-left"></i>
-  </a>
-</div>
-
-
-<!-- Affichage des messages d'erreur et de succès -->
-<div class="mt-2"></div>
-<?php
-  if (isset($_SESSION['success'])) {
-      echo '<div class="alert alert-success mt-2 text-center w-75 mx-auto" role="alert">
-      '.$_SESSION['success'].'
-      </div>';
-  }
-?>
-<?php
-  if (isset($_SESSION['error'])) {
-      echo '<div class="alert alert-danger mt-2 text-center w-75 mx-auto" role="alert">
-      '.$_SESSION['error'].'
-      </div>';
-  }
-?>
-
-<!-- TODO : Vérifier s'il y a des produits dans la BD -->
-
-<div class="container">
-<h1 class="text-center mt-3">Production de la journée du : <?= $date_brq ?></h1>
-<?php 
-  if($isFirstBrq) 
-  {?>
-    <p class="text-center text-warning">Ce BRQ est le premier BRQ rempli. 
-      Veuillez renseigner le stock de début de journée des produits pour la première fois</p>
-
-  <?php 
-  }
-  ?>
-    <form class="mt-4" action=<?= self::$config["base_url"]."index.php/brq/createBrq"?> method="post">
-    
-      <table class="table table-striped border">
-        <thead>
-          <tr>
-            <th colspan="3"></th>
-            <th class="border text-center" colspan="2">Production</th>
-            <th class="border text-center" colspan="3">Vente</th>
-          </tr>
-
-          <tr>
-            <th class="border">Produits</th>
-            <th class="border">Unité de mesure</th>
-            <?php 
-            if($isFirstBrq) 
-            {?>
-              <th class="border">Stock début de journée</th>
-
-            <?php
-            }?>
-            <th class="border">Objectifs</th>
-            <th class="border">Réalisations</th>
-            <th class="border">Prix unitaire</th>
-            <th class="border">Quantité</th>
-            <th class="border">Valeur (DA)</th>
-            <th class="border">Stock fin de journée</th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          <?php
-            foreach($categoriesProduits as $categorie)
-            {
-              if($categorie->getNomCategorie() != 'Autres')
-              {
-                echo '<tr class="categories" id="rowCategorie'.$categorie->getIdCategorie().'">';
-                echo '<td class="fw-bold border" id="nomCategorie'.$categorie->getIdCategorie().'">'.$categorie->getNomCategorie().'</td>';
-                echo '<td class="fw-bold border text-center">'.$unitesParId[$categorie->getIdUnite()].'</td>';
-                if($isFirstBrq) 
-                {
-                  echo '<td class="fw-bold border text-center" id="stockDebutCat'.$categorie->getIdCategorie().'"></td>';
-                }
-                echo '<td class="border text-center">'.$objectifsParCategorie[$categorie->getIdCategorie()].'</td>';
-                echo '<td class="border" id="realisationCat'.$categorie->getIdCategorie().'"></td>';
-                echo '<td class="border"></td>';
-                echo '<td class="border" id="qteCat'.$categorie->getIdCategorie().'"></td>';
-                echo '<td class="border" id="valeurCat'.$categorie->getIdCategorie().'"></td>';
-                echo '<td class="border" id="stockFinCat'.$categorie->getIdCategorie().'"></td>';
-                echo '</tr>';
-              }
-              
-
-              // Produits 
-              foreach ($produitsParCategorie[$categorie->getIdCategorie()] as $produit)
-              {
-                echo '<tr id="rowProduct'.$produit->getIdProduit().'">';
-                echo '<td class="border" id="nomProduit'.$produit->getIdProduit().'"> - '.$produit->getNomProduit().'</td>';
-                echo '<td class="border text-center" id="uniteMesureProduit'.$produit->getIdProduit().'">'.$unitesParId[$produit->getIdUnite()].'</td>';
-
-                if($isFirstBrq) 
-                {
-                  echo '<td class="border">
-                  <input type="number" class="stocksDebuts' . 
-                      (($categorie->getCodeCategorie() != 'AUTRES' && $categorie->getCodeCategorie() != 'LAIT PUR') ? " stocksDebutsProduitLaitier" : "") .
-                      ' stocksDebutsCat'.$categorie->getIdCategorie(). 
-                  '" id="stocksDebutProduit' . $produit->getIdProduit() . '" name="stocksDebutProduit' . $produit->getIdProduit() . '" />
-                  </td>';
-                }
-
-                //Objectifs
-                echo '<td class="border text-center">';
-                echo '<input type="hidden" class="objectifs' . 
-                    (($categorie->getCodeCategorie() != 'AUTRES' && $categorie->getCodeCategorie() != 'LAIT PUR') ? " objectifsProduitLaitier" : "") .
-                    ' objectifCat' . $categorie->getIdCategorie() . '"  id="objectifProduit' . $produit->getIdProduit() . '" name="objectifProduit' . $produit->getIdProduit() . '" value="' . $produit->getObjectif() . '" />';
-                echo '<span id="affichageObjectifProduit' .$produit->getObjectif().'">' . $produit->getObjectif() . '</span>';
-                echo '</td>';
-
-
-                // Realisations
-                echo '<td class="border">
-                    <input type="number" class="realisations' . 
-                        (($categorie->getCodeCategorie() != 'AUTRES' && $categorie->getCodeCategorie() != 'LAIT PUR') ? " realisationsProduitLaitier" : "") .
-                        ' realisationsCat'.$categorie->getIdCategorie(). 
-                    '" id="realisationProduit' . $produit->getIdProduit() . '" name="realisationProduit' . $produit->getIdProduit() . '" />
-                </td>';
-
-                // Prix unitaire
-                echo '<td class="border prixUnitaires" id="PUProduit'.$produit->getIdProduit().'"></td>';
-
-                // Quantités
-                echo '<td class="border"><input type="number" min="1" class="quantites quantitesInput'.
-                (($categorie->getCodeCategorie() != 'AUTRES' && $categorie->getCodeCategorie() != 'LAIT PUR') ? " qtesProduitLaitier" : "").
-                ' qtesCat'.$categorie->getIdCategorie()
-                .'" id="qteProduit'.$produit->getIdProduit().'" name="qteProduit'.$produit->getIdProduit().'" /></td>';
-                
-                // Valeurs
-                echo '<td class="border"><input type="number" class="valeurs valeursInput'.
-                (($categorie->getCodeCategorie() != 'AUTRES' && $categorie->getCodeCategorie() != 'LAIT PUR') ? " valeursProduitLaitier" : "").
-                ' valeursCat'.$categorie->getIdCategorie()
-                .'" id="valeurProduit'.$produit->getIdProduit().'" name="valeurProduit'.$produit->getIdProduit().'" /></td>';
-                
-                // Stock fin de journée
-                echo '<td class="border">';
-                echo '<input type="hidden" class="stocksFins' . 
-                    (($categorie->getCodeCategorie() != 'AUTRES' && $categorie->getCodeCategorie() != 'LAIT PUR') ? " stocksFinsProduitLaitier" : "") .
-                    ' stocksFinsCat' . $categorie->getIdCategorie() . '" id="stockFinProduit' . $produit->getIdProduit() . '" name="stockFinProduit' . $produit->getIdProduit() . '" />';
-                echo '<span id="affichageStockFinProduit' . $produit->getIdProduit() . '"></span>';
-                echo '</td>';
-
-
-                echo '</tr>';
-              }
-            }
-
-
-          ?>
-
-          <!-- Produits laitiers -->
-          <tr>
-            <td class="fw-bold border">Produits laitiers</td>
-            <td class="fw-bold border text-center">LEQ</td>
-            <td class="fw-bold border text-center" id="produitsLaitiersStockDebut"></td>
-            <td class="fw-bold border text-center" id="produitsLaitiersObjectif"></td>
-            <td class="fw-bold border text-center" id="produitsLaitiersRealisation"></td>
-            <td class="fw-bold border text-center" id="produitsLaitiersPU"></td>
-            <td class="fw-bold border text-center" id="produitsLaitiersQte"></td>
-            <td class="fw-bold border text-center" id="produitsLaitiersValeur"></td>
-            <td class="fw-bold border text-center" id="produitsLaitiersStockFin"></td>
-          </tr>
-
-          <!-- Total tout fait -->
-          <tr>
-            <td class="fw-bold border">Total tout fait</td>
-            <td class="fw-bold border text-center">LEQ</td>
-            <td class="fw-bold border text-center" id="totalToutFaitStockDebut"></td>
-            <td class="fw-bold border text-center" id="totalToutFaitObjectif"></td>
-            <td class="fw-bold border text-center" id="totalToutFaitRealisation"></td>
-            <td class="fw-bold border text-center" id="totalToutFaitPU"></td>
-            <td class="fw-bold border text-center" id="totalToutFaitQte"></td>
-            <td class="fw-bold border text-center" id="totalToutFaitValeur"></td>
-            <td class="fw-bold border text-center" id="totalToutFaitStockFin"></td>
-          </tr>
-
-        </tbody>
-          
-      </table>
-
-      <input type="hidden" id="date_brq" name="date_brq" value="<?php echo $date_brq; ?>" />      
-
-      <!--Bouton pour confirmer le tableau -->
-      <div class="row mt-2 col-md-8 col-4 mx-auto mb-2">              
-        <button type="submit" class="btn btn-success mx-auto">
-            <i class="fas fa-floppy-disk"></i>
-              Suivant
-        </button>
-      </div>
-
-    </form> 
-
-</div>
-
-<!-- <script type="application/json" src="/brq1.js"></script> -->
-<script>
+console.log("hello");
 
 // Fonctions de calculs
 
@@ -284,7 +76,6 @@ function updateValues(className, parseMethod, idName)
   }
   
   document.getElementById(idName).innerHTML = total;
-  document.getElementById(idName).value = total;
 }
 
 
@@ -329,11 +120,22 @@ function updateAllStockProduit(className, idToUpdateName)
   var stocksFinProduit = document.getElementsByClassName(className);
   var stockFinal = 0;
   for (var i = 0; i < stocksFinProduit.length; i++) {
-    stockFinal += parseInt(stocksFinProduit[i].value) || 0;
+    stockFinal += parseInt(stocksFinProduit[i].innerHTML) || 0;
   }
 
   document.getElementById(idToUpdateName).innerHTML = stockFinal;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Ajouter un évènements aux inputs de réalisation afin de les comparer aux objectifs
@@ -341,7 +143,7 @@ var realisations = document.getElementsByClassName('realisations');
 for (var i = 0; i < realisations.length; i++) {
     realisations[i].addEventListener('keyup', function() {
     var idProduit = this.id.replace('realisationProduit', '');
-    var objectif = document.getElementById('rowProduct'+idProduit).getElementsByClassName('objectifs')[0].value;
+    var objectif = document.getElementById('rowProduct'+idProduit).getElementsByClassName('objectifs')[0].innerHTML;
     var realisation = this.value;
 
     // On convertit les valeurs en entier
@@ -379,7 +181,7 @@ for (var i = 0; i < quantites.length; i++) {
   var objectifsProduitLaitier = document.getElementsByClassName('objectifsProduitLaitier');
   var produitsLaitiersObjectif = 0;
   for (var i = 0; i < objectifsProduitLaitier.length; i++) {
-    produitsLaitiersObjectif += parseInt(objectifsProduitLaitier[i].value);
+    produitsLaitiersObjectif += parseInt(objectifsProduitLaitier[i].innerHTML);
   }
   document.getElementById('produitsLaitiersObjectif').innerHTML = produitsLaitiersObjectif;
 
@@ -387,7 +189,7 @@ for (var i = 0; i < quantites.length; i++) {
   var objectifs = document.getElementsByClassName('objectifs');
   var objectifsTotal = 0;
   for (var i = 0; i < objectifs.length; i++) {
-    objectifsTotal += parseInt(objectifs[i].value);
+    objectifsTotal += parseInt(objectifs[i].innerHTML);
   }
   document.getElementById('totalToutFaitObjectif').innerHTML = objectifsTotal;
 
@@ -575,8 +377,8 @@ for (var i = 0; i < quantites.length; i++) {
       stockFinal = 'ERREUR';
     }
 
-    document.getElementById('stockFinProduit'+idProduit).value = stockFinal;
-    document.getElementById('affichageStockFinProduit'+idProduit).textContent = stockFinal;
+    document.getElementById('stockFinProduit'+idProduit).innerHTML = stockFinal;
+
   }
 
   // Ajout d'évènements à chaque fois qu'on modifie ces valeurs
@@ -636,8 +438,3 @@ for (var i = 0; i < quantites.length; i++) {
   };
 
   
-
-</script>
-</body>
-
-</html>

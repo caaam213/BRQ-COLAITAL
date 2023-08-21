@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="multiplicateur">multiplicateur:</label>
-                    <input type="text" step="0.01" min="1" class="form-control" value=<?= $uniteMesure->getMultiplicateur() ?> id="multiplicateur" name="multiplicateur" required>
+                    <input type="text" step="0.01" min="0.05" class="form-control" value=<?= $uniteMesure->getMultiplicateur() ?> id="multiplicateur" name="multiplicateur" required>
                 </div>
 
                 <!--Bouton pour modifier l'unité de mesure -->

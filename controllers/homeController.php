@@ -44,6 +44,7 @@ class HomeController
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config["base_url"]); 
+            exit();
         }
         
            

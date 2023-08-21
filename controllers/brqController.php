@@ -5,6 +5,8 @@ require_once 'models/BrqModel.php';
 require_once 'models/ProduitModel.php';
 require_once 'models/CategorieProduitModel.php';
 require_once 'models/UniteMesureModel.php';
+require_once 'models/InfoBrqProduitModel.php';
+
 
 class BrqController
 {
@@ -106,6 +108,25 @@ class BrqController
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url'].'index.php/home');
+            exit();
+        }
+    }
+    
+    /**
+     * ifIsFirstBrq : Vérifie si le brq est le premier de la base de données
+     *
+     * @return boolean
+     */
+    public function ifIsFirstBrq()
+    {
+        $brqList = BrqModel::getAllBrq();
+        if (count($brqList) == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -123,43 +144,17 @@ class BrqController
             $categoriesProduits = CategorieProduitModel::getAllCategoriesProduits();
             $unites = UniteMesureModel::getAllUnitesMesure();
 
-            // Vérification du format de la date
-            if (isset($_GET['dateBrq']) && !empty($_GET['dateBrq']))
-            {
-                if(!isDateValid($_GET['dateBrq']))
-                {
-                    $_SESSION['error'] = "La date n'est pas dans le bon format"; // Erreur : La date n'est pas au bon format
-                    header('Location: '.self::$config['base_url'].'index.php/brq');
-                    return;
-                }
-                $date_brq = htmlspecialchars($_GET['dateBrq']);
-                $date_brq = date("Y-m-d", strtotime($date_brq));
-            }
-            else
-            {
-                $_SESSION['error'] = "La date n'est pas dans le bon format"; // Erreur : La date n'est pas au bon format
-                header('Location: '.self::$config['base_url'].'index.php/brq');
-                return;
-            }
+            $isFirstBrq = self::ifIsFirstBrq();
 
-            // Vérifier si la date est dans le bon intervalle
-            if (strtotime($date_brq) < strtotime(self::$config['date_begin_brq']) || strtotime($date_brq) > strtotime(self::$config['date_end_brq']))
-            {
-                $_SESSION['error'] = "La date n'est pas dans l'intervalle autorisé "+$date_brq; // Erreur : La date n'est pas dans l'intervalle autorisé
-                header('Location: '.self::$config['base_url'].'index.php/brq');
-                return;
-            }
+            // Vérifier la date du brq en paramètre
+            $date_brq = createValidDate($_GET['dateBrq']);
 
-            // Vérifier si le brq existe déjà
-            $brqList = BrqModel::getAllBrq();
-            foreach ($brqList as $brq)
+            if(!isDateValid($date_brq))
             {
-                if ($brq->getDateBrq() == $date_brq)
-                {
-                    $_SESSION['error'] = "Le brq existe déjà"; // Erreur : Le brq existe déjà
-                    header('Location: '.self::$config['base_url'].'index.php/brq');
-                    return;
-                }
+                $erreur_msg = $date_brq;
+                $_SESSION['error'] = $erreur_msg;
+                header('Location: '.self::$config['base_url'].'index.php/brq');
+                exit();
             }
 
             // Récupérer les unités de mesures en fonction des id
@@ -188,14 +183,138 @@ class BrqController
             }
 
             // On récupère les objectifs des catégories en ajoutant les objectifs des produits
-
+            
             require_once 'views/brq1ProdVente.php';
+            
+            return;
         }
         else
         {
             $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
             header('Location: '.self::$config['base_url'].'index.php/home');
+            exit();
         }
 
     }
+
+    public function createBrq()
+    {
+        if(isset($_SESSION['code_role']))
+        {
+            
+            // Récupérer les produits
+            $produits = ProduitModel::getAllProduits();
+            $productsIdList = array();
+            foreach ($produits as $produit)
+            {
+                $productsIdList[] = $produit->getIdProduit();
+            }
+
+            // Date du brq 
+            $dateBrq = htmlspecialchars($_POST['date_brq']);
+            $dateBrq = date("d/m/Y", strtotime($dateBrq));
+
+            // Récupérer le nombre de BRQ pour cette année 
+            $nbrBrq = BrqModel::getNbrBrqByYear(date("Y")) +1;
+
+            // On va crée le brq
+            $brq = new BRQ(
+                $dateBrq, 
+                date('d/m/Y'),
+                $nbrBrq,
+                date('d/m/Y'),
+                null, 
+                $_SESSION['id_util'],
+                $_SESSION['id_util'],
+                "incomplet-2"
+            );
+
+            // On va ajouter le brq dans la base de données
+            $response = BrqModel::createBrq($brq);
+
+            if(!$response)
+            {
+                $_SESSION['error'] = "Erreur lors de la création du brq ";
+                // Erreur : Erreur lors de la création du brq
+                header('Location: '.self::$config['base_url'].'index.php/brq');
+                exit();
+            }
+
+            // Pour chaque produit, on va récupérer les données du tableau 
+            foreach ($productsIdList as $idProduit)
+            {
+                $realisation = $_POST['realisationProduit'.$idProduit] != "" ? htmlspecialchars($_POST['realisationProduit'.$idProduit]) : 0;
+                $objectif = $_POST['objectifProduit'.$idProduit] != "" ? htmlspecialchars($_POST['objectifProduit'.$idProduit]) : 0;
+                $stockFinJournee = $_POST['stockFinProduit'.$idProduit] != "" ? htmlspecialchars($_POST['stockFinProduit'.$idProduit]) : 0;
+                $quantite = $_POST['qteProduit'.$idProduit] != "" ? htmlspecialchars($_POST['qteProduit'.$idProduit]) : 0;
+                $valeur = $_POST['valeurProduit'.$idProduit]!= "" ? htmlspecialchars($_POST['valeurProduit'.$idProduit]) : 0;
+
+                $info_brq_produit = new InfoBrqProduit(
+                    $realisation,
+                    $objectif,
+                    $stockFinJournee,
+                    $quantite,
+                    $valeur,
+                    null,
+                    $idProduit,
+                    $dateBrq
+                );
+                $response = InfoBrqProduitModel::addInfoBrqProduit($info_brq_produit);
+
+                if(!$response)
+                {
+                    $_SESSION['error'] = "Erreur lors de la création des informations du brq pour le produit ".$idProduit;
+                    header('Location: '.self::$config['base_url'].'index.php/brq');
+                    exit();
+                }
+                
+            }
+            
+            $_SESSION['success'] = "La phase 1 du brq est un succès !"; 
+            header('Location: '.self::$config['base_url'].'index.php/brq/infosPertesProd?dateBrq='.$dateBrq);
+            exit();
+            
+            
+        }
+        else
+        {
+            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
+            header('Location: '.self::$config['base_url'].'index.php/home');
+            exit();
+        }
+    }
+
+    /**
+     * infosPertesProd : Afficher la page des infos pertes
+     *
+     * @return void
+     */
+    public function infosPertesProd()
+    {
+        unsetSessionVariables();
+        if (isset($_SESSION['code_role']))
+        {
+            // Vérifier la date du brq en paramètre
+            $date_brq = createValidDate($_GET['dateBrq']);
+
+            if(!isDateValid($date_brq))
+            {
+                $erreur_msg = $date_brq;
+                $_SESSION['error'] = $erreur_msg;
+                header('Location: '.self::$config['base_url'].'index.php/brq');
+                exit();
+            }
+            require_once 'views/brq2PerteProd.php';
+        }
+        else
+        {
+            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
+            header('Location: '.self::$config["base_url"]); 
+            exit();
+        }
+    }
+
+
+
+    
 }

@@ -44,7 +44,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="multiplicateur">Multiplicateur:</label>
-                    <input type="number" step="0.01" min="1" class="form-control" id="multiplicateur" name="multiplicateur" required>
+                    <input type="number" step="0.01" min="0.05" class="form-control" id="multiplicateur" name="multiplicateur" required>
                 </div>
 
                 <!--Bouton pour ajouter l'unité de mesure -->
