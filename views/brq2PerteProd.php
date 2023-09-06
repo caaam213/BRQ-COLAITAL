@@ -8,7 +8,7 @@
 
 <!-- Bouton de retour -->
 <div class="row mt-3">
-  <a href="<?= self::$config['base_url'] ?>index.php/brq" class="btn btn-outline-success btn-icon btn-rounded-circle mx-auto w-25">
+  <a href="<?= self::$config['base_url'] ?>index.php/brq/addOrModifyBrq?dateBrq=<?=$dateBrq?>" class="btn btn-outline-success btn-icon btn-rounded-circle mx-auto w-25">
     <i class="fas fa-arrow-left"></i>
   </a>
 </div>
@@ -32,7 +32,7 @@
 ?>
 
 <div class="container">
-<h1 class="text-center mt-3">Perte à la production du : <?= $date_brq ?></h1>
+<h1 class="text-center mt-3">Perte à la production du : <?= $dateBrq ?></h1>
 <form class="mt-4" action=<?= self::$config["base_url"]."index.php/brq/addInfoPertesProd"?> method="post">
     <table class="table table-striped border">
         <thead>
@@ -43,11 +43,21 @@
           </tr>
         </thead>
         <tbody>
-            <table class="table table-striped border">
-                
+            <?php 
+              foreach ($produitsPerte as $produit)
+              {
+                  echo '<tr>
+                          <td class="border">'.$produit->getIntitule().'</td>
+                          <td class="border"><input type="number" name="quantite_'.$produit->getCodeProduitPerte().'" value="0" min="0" max="100000" class="form-control"></td>
+                          <td class="border"><input type="number" name="taux_'.$produit->getCodeProduitPerte().'" value="0" min="0" max="100" class="form-control"></td>
+                        </tr>';
+              }
 
-            </table>
+            ?>
         
         <tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success btn-lg btn-block">Valider</button>
 
 </form>

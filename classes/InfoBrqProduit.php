@@ -10,6 +10,8 @@ class InfoBrqProduit {
     private $couvertureJour;
     private $idProduit;
     private $dateBrq;
+    private $perteProd;
+    private $stockDebut;
     
     /**
      * __construct
@@ -24,6 +26,8 @@ class InfoBrqProduit {
      * @param float $couvertureJour
      * @param int $idProduit
      * @param string $dateBrq
+     * @param int $perteProd
+     * @param int $stockDebut
      *
      * @return void
      */
@@ -35,7 +39,9 @@ class InfoBrqProduit {
         $valeurVente,
         $couvertureJour,
         $idProduit,
-        $dateBrq
+        $dateBrq,
+        $perteProd,
+        $stockDebut
     ) {
         $this->realisation = $realisation;
         $this->objectif = $objectif;
@@ -45,6 +51,8 @@ class InfoBrqProduit {
         $this->couvertureJour = $couvertureJour;
         $this->idProduit = $idProduit;
         $this->dateBrq = $dateBrq;
+        $this->perteProd = $perteProd;
+        $this->stockDebut = $stockDebut;
     }
 
     /**
@@ -216,5 +224,34 @@ class InfoBrqProduit {
      */
     public function setDateBrq($dateBrq) {
         $this->dateBrq = $dateBrq;
+    }
+
+    /**
+     * getPerteProd : Retourne la perte du produit
+     *
+     * @return int
+     */
+    public function getPerteProd() {
+        return $this->perteProd;
+    }
+
+    /**
+     * setPerteProd : Définit la perte du produit
+     *
+     * @param int $perteProd
+     * @return void
+     */
+    public function setPerteProd($perteProd) {
+        $this->perteProd = $perteProd;
+    }
+    
+    /**
+     * getStockDebut : Retourne le stock du produit en début de journée
+     *
+     * @return int
+     */
+    public function getStockDebut()
+    {
+        return $this->stockDebut;
     }
 }

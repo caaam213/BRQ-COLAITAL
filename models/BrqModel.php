@@ -34,7 +34,13 @@ class BrqModel
             return array();
         }
     }
-
+    
+    /**
+     * createBrq : Ajoute un brq dans la base de données
+     *
+     * @param  mixed $brq
+     * @return boolean
+     */
     public static function createBrq($brq)
     {
         try
@@ -78,7 +84,13 @@ class BrqModel
             return false;
         }
     }
-
+    
+    /**
+     * getNbrBrqByYear : Récupère le nombre de brq d'une année
+     *
+     * @param  mixed $year
+     * @return int
+     */
     public static function getNbrBrqByYear($year)
     {
         try
@@ -96,5 +108,41 @@ class BrqModel
             return 0;
         }
     }
+    
+    /**
+     * getBrqByDate : Récupère un brq par sa date
+     *
+     * @param  mixed $date
+     * @return void
+     */
+    public static function getBrqByDate($date)
+    {
+        try
+        {
+            $dbConnection = ConnexionDB::getInstance()->getConnection();
+            $stmt = $dbConnection->prepare("SELECT * FROM BRQ WHERE date_brq = :date");
+            $stmt->bindParam(':date', $date);
+            $stmt->execute();
+            $brq = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($brq)
+            {
+                $brqObj = new BRQ($brq['date_brq'], $brq['date_creation'], $brq['num_brq'], 
+                $brq['date_derniere_modif'], $brq['faits_saillants'], $brq['Id_Utilisateur_cree'],
+                $brq['Id_dernier_util_modif'], $brq['etat_brq']);
+                return $brqObj;
+            }
+            return null;
+
+
+            
+        }
+        catch (PDOException $e)
+        {
+            echo "Erreur lors de la récupération du brq : " . $e->getMessage();
+            return null;
+        }
+    }
+
+    
 }
 

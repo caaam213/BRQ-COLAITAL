@@ -21,18 +21,14 @@
                 <div class="col-md-12 text-center">
                     <?php 
                     if (isset($_SESSION['code_role']))
-                    {
-                        if ($_SESSION['code_role'] == 'ADMIN')
-                        {?>
-                            <a href=<?= self::$config["base_url"].'index.php/home'?> class="btn btn-warning">Retour à l'accueil</a>
-                            
-                        <?php
-                        }
-                        else
-                        {?>
-                            <a href=<?= self::$config["base_url"]?> class="btn btn-warning">Retour à la page de Connexion</a>
-                        <?php
-                        }
+                    {?>
+                        <a href=<?= self::$config["base_url"].'index.php/home'?> class="btn btn-warning">Retour à l'accueil</a>
+                    <?php
+                    }
+                    else
+                    {?>
+                        <a href=<?= self::$config["base_url"]?> class="btn btn-warning">Retour à la page de Connexion</a>
+                    <?php
                     }
                     ?>
                 </div>

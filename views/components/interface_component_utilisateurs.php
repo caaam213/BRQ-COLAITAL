@@ -5,7 +5,7 @@
             "url" => self::$config["base_url"]."index.php/utilisateurs/addUser",
             "icon" => "fa-solid fa-user-plus",
             "restrict_access" => true, 
-            "roleToAccess" => "ADMIN"
+            "roleToAccess" => ["ADMIN"]
         ], 
         
         [
@@ -13,7 +13,7 @@
             "url" => self::$config["base_url"]."index.php/utilisateurs/allUsers",
             "icon" => "fa-solid fa-users",
             "restrict_access" => true, 
-            "roleToAccess" => "ADMIN"
+            "roleToAccess" => ["ADMIN", "CONTROLEUR"]
         ],
 
         [

@@ -35,15 +35,10 @@ class UnitesMesureController
     */
     public function displayUnitesMesureInterface()
     {
-        if (isset($_SESSION['code_role'])) {
-            $unitesMesure = UniteMesureModel::getAllUnitesMesure();
-            require_once 'views/unitesMesureManage.php';
-            unsetSessionVariables();
-        } else {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config['base_url']);
-            exit();
-        }
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        $unitesMesure = UniteMesureModel::getAllUnitesMesure();
+        require_once 'views/unitesMesureManage.php';
+        unsetSessionVariables();
     }
     
     /**
@@ -53,14 +48,9 @@ class UnitesMesureController
      */
     public function addUniteMesure()
     {
-        if (isset($_SESSION['code_role'])) {
-            require_once 'views/unitesMesureCreerForm.php';
-            unsetSessionVariables();
-        } else {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config['base_url']);
-            exit();
-        }
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        require_once 'views/unitesMesureCreerForm.php';
+        unsetSessionVariables();
     }
     
     /**
@@ -71,48 +61,51 @@ class UnitesMesureController
     public function add()
     {
         
-        if (isset($_SESSION['code_role'])) {
-            if (isset($_POST['codeUnite']) && isset($_POST['uniteNom']) && isset($_POST['multiplicateur'])) {
-                // Vérification que le code de l'unité de mesure n'existe pas déjà
-                $unites = UniteMesureModel::getAllUnitesMesure();
-                $unitesCode = array();
-                foreach ($unites as $unite) {
-                    array_push($unitesCode, $unite->getCodeUnite());
-                }
-
-                $codeUnite = htmlspecialchars($_POST['codeUnite']);
-                $uniteNom = htmlspecialchars($_POST['uniteNom']);
-                $multiplicateur = htmlspecialchars($_POST['multiplicateur']);
-                
-
-                if(in_array($codeUnite, $unitesCode))
-                {
-                    // Si l'unité de mesure se trouve déjà dans la base de données
-                    $_SESSION['error'] = "Le code de l'unité de mesure existe déjà";
-                }
-                else
-                {
-                    // Si tout va bien, on ajoute l'unité de mesure
-                    $uniteMesure = new UniteMesure($codeUnite, $uniteNom, $multiplicateur);
-                    $result = UniteMesureModel::addUniteMesure($uniteMesure);
-                    if ($result) {
-                        $_SESSION['success'] = "L'unité de mesure ". $codeUnite." a bien été ajoutée";
-                    } else {
-                        $_SESSION['error'] = "Erreur lors de l'ajout de l'unité de mesure"; // Erreur : L'unité de mesure n'a pas pu être ajoutée
-                    }
-                }
-                
-            } 
-            else {
-                $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        if (isset($_POST['codeUnite']) && isset($_POST['uniteNom']) && isset($_POST['multiplicateur'])) {
+            
+            // Vérification que le code de l'unité de mesure n'existe pas déjà
+            $unites = UniteMesureModel::getAllUnitesMesure();
+            $unitesCode = array();
+            foreach ($unites as $unite) 
+            {
+                array_push($unitesCode, $unite->getCodeUnite());
             }
-            header('Location: '.self::$config['base_url'].'index.php/unitesMesure/addUniteMesure');
-            exit();
-        } else {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config['base_url']);
-            exit();
+
+            $codeUnite = htmlspecialchars($_POST['codeUnite']);
+            $uniteNom = htmlspecialchars($_POST['uniteNom']);
+            $multiplicateur = htmlspecialchars($_POST['multiplicateur']);
+                
+
+            if(in_array($codeUnite, $unitesCode))
+            {
+                // Si l'unité de mesure se trouve déjà dans la base de données
+                $_SESSION['error'] = "Le code de l'unité de mesure existe déjà";
+            }
+            else
+            {
+                // Si tout va bien, on ajoute l'unité de mesure
+                $uniteMesure = new UniteMesure($codeUnite, $uniteNom, $multiplicateur);
+                $result = UniteMesureModel::addUniteMesure($uniteMesure);
+                if ($result) 
+                {
+                    $_SESSION['success'] = "L'unité de mesure ". $codeUnite." a bien été ajoutée";
+                } 
+                else 
+                {
+                    $_SESSION['error'] = "Erreur lors de l'ajout de l'unité de mesure"; // Erreur : L'unité de mesure n'a pas pu être ajoutée
+                }
+            }
+                
+        } 
+        else 
+        {
+            $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
         }
+
+        header('Location: '.self::$config['base_url'].'index.php/unitesMesure/addUniteMesure');
+        exit();
+        
     }
     
     /**
@@ -122,42 +115,38 @@ class UnitesMesureController
      */
     public function modifyUniteMesure()
     {
-        if (isset($_SESSION['code_role'])) {
-            if (isset($_GET['idUnite']))
-            {
-                // Vérification que l'unité de mesure est bien renseignée
-                $idUnite = htmlspecialchars($_GET['idUnite']);
-                if ($idUnite == null || $idUnite == "") {
-                    $_SESSION['error'] = "L'unité de mesure n'existe pas"; // L'unité de mesure n'existe pas
-                    header('Location: '.self::$config['base_url'].'index.php/error');
-                    exit();
-                }
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        if (isset($_GET['idUnite']))
+        {
+            // Vérification que l'unité de mesure est bien renseignée
+            $idUnite = htmlspecialchars($_GET['idUnite']);
+            if ($idUnite == null || $idUnite == "") {
+                $_SESSION['error'] = "L'unité de mesure n'existe pas"; // L'unité de mesure n'existe pas
+                header('Location: '.self::$config['base_url'].'index.php/error');
+                exit();
+            }
 
-                // On vérifie que l'unité de mesure existe dans la base de données
-                $uniteMesure = UniteMesureModel::getUniteMesureById($idUnite);
-                if ($uniteMesure != null)
-                {
-                    require_once 'views/unitesMesureModifierForm.php';
-                }
-                else
-                {
-                    $_SESSION['errorPage'] = "L'unité de mesure n'existe pas"; // Erreur : L'unité de mesure n'existe pas
-                    header('Location: '.self::$config['base_url'].'index.php/error');
-                    exit();
-                }
+            // On vérifie que l'unité de mesure existe dans la base de données
+            $uniteMesure = UniteMesureModel::getUniteMesureById($idUnite);
+            if ($uniteMesure != null)
+            {
+                require_once 'views/unitesMesureModifierForm.php';
             }
             else
             {
-                $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
-                header('Location: '.self::$config['base_url'].'index.php/unitesMesure');
+                $_SESSION['errorPage'] = "L'unité de mesure n'existe pas"; // Erreur : L'unité de mesure n'existe pas
+                header('Location: '.self::$config['base_url'].'index.php/error');
                 exit();
             }
-            unsetSessionVariables();
-        } else {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config['base_url']);
+        }
+        else
+        {
+            $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
+            header('Location: '.self::$config['base_url'].'index.php/unitesMesure');
             exit();
         }
+        unsetSessionVariables();
+        
     }
     
     /**
@@ -167,30 +156,30 @@ class UnitesMesureController
      */
     public function modify()
     {
-        if (isset($_SESSION['code_role'])) {
-            if (isset($_POST['codeUnite']) && isset($_POST['uniteNom']) && isset($_POST['multiplicateur'])) {
-                $codeUnite = htmlspecialchars($_POST['codeUnite']);
-                $uniteNom = htmlspecialchars($_POST['uniteNom']);
-                $multiplicateur = htmlspecialchars($_POST['multiplicateur']);
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        if (isset($_POST['codeUnite']) && isset($_POST['uniteNom']) && isset($_POST['multiplicateur'])) {
+            $codeUnite = htmlspecialchars($_POST['codeUnite']);
+            $uniteNom = htmlspecialchars($_POST['uniteNom']);
+            $multiplicateur = htmlspecialchars($_POST['multiplicateur']);
                 
-                $uniteMesure = new UniteMesure($codeUnite, $uniteNom, $multiplicateur);
-                $uniteMesure->setIdUnite(htmlspecialchars($_POST['idUnite']));
+            $uniteMesure = new UniteMesure($codeUnite, $uniteNom, $multiplicateur);
+            $uniteMesure->setIdUnite(htmlspecialchars($_POST['idUnite']));
 
-                $result = UniteMesureModel::modifyUniteMesure($uniteMesure);
-                if ($result) {
-                    $_SESSION['success'] = "L'unité de mesure ". $codeUnite." a bien été modifiée";
-                } else {
-                    $_SESSION['error'] = "L'unité de mesure ". $codeUnite." n'a pas pu être modifiée"; // Erreur : L'unité de mesure n'a pas pu être modifiée
-                }
-            } else {
-                $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
+            $result = UniteMesureModel::modifyUniteMesure($uniteMesure);
+            if ($result)
+            {
+                $_SESSION['success'] = "L'unité de mesure ". $codeUnite." a bien été modifiée";
+            } 
+            else 
+            {
+                $_SESSION['error'] = "L'unité de mesure ". $codeUnite." n'a pas pu être modifiée"; // Erreur : L'unité de mesure n'a pas pu être modifiée
             }
-            header('Location: '.self::$config['base_url'].'index.php/unitesMesure');
-            exit();
-        } else {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config['base_url']);
-            exit();
+        } 
+        else 
+        {
+            $_SESSION['error'] = self::$configErrors['1007']; // Erreur : Tous les champs n'ont pas été remplis
         }
+        header('Location: '.self::$config['base_url'].'index.php/unitesMesure');
+        exit();
     }
 }

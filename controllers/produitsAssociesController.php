@@ -37,14 +37,9 @@ class produitsAssociesController
      */
     public function displayProduitsAssociesInterface()
     {
-        if (isset($_SESSION['code_role'])) {
-            require_once 'views/produitsAssociesInterface.php';
-            unsetSessionVariables();
-        } else {
-            $_SESSION['error'] = self::$configErrors['1003'];
-            header('Location: '.self::$config['base_url']);
-            exit();
-        }
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        require_once 'views/produitsAssociesInterface.php';
+        unsetSessionVariables();
     }
 
     

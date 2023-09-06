@@ -36,17 +36,7 @@ class HomeController
     public function displayHome()
     {
         unsetSessionVariables();
-        if (isset($_SESSION['code_role']))
-        {
-            require_once 'views/home.php';
-        }
-        else
-        {
-            $_SESSION['error'] = self::$configErrors['1003']; // Erreur : Vous devez être connecté pour accéder à cette page
-            header('Location: '.self::$config["base_url"]); 
-            exit();
-        }
-        
-           
+        verifyAccesRoleCode(["ADMIN","CONTROLEUR"]);
+        require_once 'views/home.php';
     }
 }

@@ -10,7 +10,8 @@
             "name" => "Interface Produits",
             "url" => self::$config["base_url"]."index.php/produitsAssocies",
             "icon" => "fa-solid fa-cart-plus",
-            "restrict_access" => false,
+            "restrict_access" => true,
+            "roleToAccess" => ["ADMIN", "CONTROLEUR"]
         ],
         [
             "name" => "Interface Utilisateurs",

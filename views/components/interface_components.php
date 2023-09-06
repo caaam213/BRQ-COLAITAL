@@ -12,7 +12,7 @@
     foreach ($interfaceArray as $interface) {
         $display = true;
         if ($interface["restrict_access"] == true) {
-            if ($_SESSION['code_role'] != $interface["roleToAccess"]) {
+            if (!in_array($_SESSION['code_role'], $interface["roleToAccess"])) {
                 $display = false;
             }
         }

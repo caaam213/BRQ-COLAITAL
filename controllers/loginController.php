@@ -39,11 +39,7 @@ class LoginController
     {
         if (isset($_SESSION['email']))
         {
-            session_unset($_SESSION['email']);
-            session_unset($_SESSION['id_util']);
-            session_unset($_SESSION['nom_util']);
-            session_unset($_SESSION['prenom_util']);
-            session_unset($_SESSION['code_role']);
+            session_unset();
         }
         
         require_once 'views/utilisateurConnexion.php';
